@@ -1,11 +1,14 @@
-# Creates a GitHub release when you push a version tag (for example 1.0.0)
-# and attaches theme.css and manifest.json, which Obsidian downloads from it.
+# Attaches theme.css and manifest.json (which Obsidian downloads) to a release.
+# Runs when you push a version tag (for example 1.0.0), creating the release,
+# or when you publish a release on GitHub, adding the files to it.
 name: Release
 
 on:
   push:
     tags:
       - "*.*.*"
+  release:
+    types: [published]
 
 permissions:
   contents: write
