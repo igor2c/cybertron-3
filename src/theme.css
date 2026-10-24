@@ -69,13 +69,12 @@ Icons
     --color-accent-1: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 3.8%));
     --color-accent-2: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 3.8%));
 
-    --background-modifier-form-field: var(--color-base-25);
+    /* --background-modifier-form-field, --interactive-normal, --interactive-hover
+       and --text-selection are set in body.theme-dark, which always wins over
+       this block, so their duplicates here were removed. */
     --background-secondary-alt: var(--color-black);
-    --interactive-normal: var(--color-base-30);
-    --interactive-hover: var(--color-base-35);
     --background-modifier-cover: rgba(10, 10, 10, 0.4);
     --text-highlight-bg: var(--color-highlight-bg);
-    --text-selection: hsla(var(--interactive-accent-hsl), 0.25);
     --input-shadow: 0px 1px 0px 1px var(--shadow-300);
     --input-shadow-hover: 0px 1px 0px 1px var(--shadow-300);
 
@@ -91,6 +90,7 @@ Icons
     --color-gray-20: hsl(224, 37%, 80%); /* SB Common Text & Icons on Hover */
     --color-gray-30: hsl(224, 26%, 70%);
     --color-gray-40: hsl(224, 17%, 68%); /* Metadata Text */
+    --color-gray-48: hsl(225, 15%, 61%); /* Completed checkboxes (restored from LYT Mode) */
     --color-gray-50: hsl(226, 10%, 47%); /* Graph Lines & Lighter Borders */
     --color-gray-60: hsl(225, 14%, 55%); /* SB Common Icons & Status Bar Text */
     --color-gray-70: hsl(225, 11%, 36%); /* SB Disabled Text & Titlebar */
@@ -208,7 +208,7 @@ body.theme-dark {
     --checkbox-border-color: var(--border-900);
     --checkbox-border-color-hover: var(--border-900);
     --checklist-done-decoration: none; /* used to be: line-through ADDED 31-01-2024*/
-    --checklist-done-color: var(--text-faintly-muted);
+    --checklist-done-color: var(--color-gray-48); /* Custom, was var(--text-faintly-muted), which is never defined */
 
     /* Code */
     --code-size: 1em; /* Custom */
@@ -291,12 +291,14 @@ body.theme-dark {
     --h4-color: #de87ca; /* Custom, was var(--color-green-700) */
     --h5-color: #5dbcd2; /* Custom, was var(--color-slate-500) */
     --h6-color: #b4b4b4; /* Custom, was var(--color-slate-700) */
-    --h1-line-height: calc(0.8 * var(--line-height));
-    --h2-line-height: calc(0.8 * var(--line-height));
-    --h3-line-height: calc(0.8 * var(--line-height));
-    --h4-line-height: calc(0.8 * var(--line-height));
-    --h5-line-height: calc(0.8 * var(--line-height));
-    --h6-line-height: calc(0.8 * var(--line-height));
+    /* Custom: these were calc(0.8 * var(--line-height)), but --line-height is never
+       defined, so headings have always used the body line height. Kept that way. */
+    --h1-line-height: var(--line-height-normal);
+    --h2-line-height: var(--line-height-normal);
+    --h3-line-height: var(--line-height-normal);
+    --h4-line-height: var(--line-height-normal);
+    --h5-line-height: var(--line-height-normal);
+    --h6-line-height: var(--line-height-normal);
     --h1-size: 1.750rem;
     --h2-size: 1.688rem;
     --h3-size: 1.563rem;
@@ -760,7 +762,7 @@ body.theme-dark {
     color: var(--color-cyan-500);
     background-color: var(--color-gray-90);
     border: 1px solid var(--color-cyan-500);
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
 }
 
 .theme-dark .clickable-icon.nav-action-button:active,
@@ -768,7 +770,7 @@ body.theme-dark {
     color: var(--color-gray-60);
     background-color: var(--color-blacker);
     border: 1px solid var(--color-gray-60);
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
 }
 
 /*────────────────────────────────────
@@ -794,12 +796,19 @@ body.theme-dark {
 
 /*─────────Tree Items for Tabs──────────*/
 
+/* Custom start: the left padding is where Obsidian draws the collapse
+   chevron (absolutely positioned 20px left of the text), so it must stay
+   at 24px. With 12px the chevron hung off the left edge and got clipped.
+   Set through Obsidian's own variable, on a plain `body` selector, so its
+   mobile and right-to-left overrides still apply. Was a hard-coded
+   `padding: 2px 8px 2px 12px` on .tree-item .tree-item-self */
+body {
+    --nav-item-padding: var(--size-2-1) var(--size-4-2) var(--size-2-1) var(--size-4-6);
+}
+/* Custom end */
+
 .tree-item .tree-item-self {
     border-radius: var(--size-2-1);
-    padding:    var(--size-2-1)
-                var(--size-4-2)
-                var(--size-2-1)
-                calc(4px + var(--size-4-2));
     display: flex;
     align-items: flex-start;
 }
@@ -883,13 +892,12 @@ body.theme-dark .nav-files-container .nav-folder-title[data-path="/"]:hover {
             File Navigator
 ────────────────────────────────────*/
 
-/* Custom start */
+/* Custom start: padding comes from --nav-item-padding (see Tree Items) */
 .nav-folder-title {
     color: #c0cccc;
     border: 1px solid transparent;
     border-radius: 2px;
     line-height: 1.3;
-    padding: var(--size-2-1) var(--size-4-2);
 }
 
 .nav-file-title {
@@ -897,7 +905,6 @@ body.theme-dark .nav-files-container .nav-folder-title[data-path="/"]:hover {
     border: 1px solid transparent;
     border-radius: 2px;
     line-height: 1.3;
-    padding: var(--size-2-1) var(--size-4-2);
 }
 /* Custom end */
 
@@ -908,7 +915,8 @@ body.theme-dark .nav-files-container .nav-file-title:hover {
     border: 1px solid var(--color-cyan-500);
 }
 
-body.theme-dark .nav-files-container .nav-folder-title:hover .nav-folder-collapse-indicator {
+/* Custom: was .nav-folder-collapse-indicator, a class Obsidian no longer uses */
+body.theme-dark .nav-files-container .nav-folder-title:hover .collapse-icon svg.svg-icon {
     color: var(--color-cyan-500);
 }
 
@@ -918,7 +926,7 @@ body.theme-dark .nav-files-container .nav-file-title:active {
     background: var(--color-blacker);
 }
 
-body.theme-dark .nav-files-container .nav-folder-title:active .nav-folder-collapse-indicator {
+body.theme-dark .nav-files-container .nav-folder-title:active .collapse-icon svg.svg-icon {
     color: var(--color-gray-70);
 }
 
@@ -1204,7 +1212,7 @@ input[type=checkbox]:checked:after {
 /* Normal Text */
 .markdown-source-view.mod-cm6 .HyperMD-task-line:is([data-task="!"],[data-task="/"],[data-task="?"],[data-task="n"],[data-task="*"],[data-task="l"],[data-task="i"],[data-task="<"],[data-task="S"],[data-task="\""],[data-task="I"],[data-task="p"],[data-task="c"],[data-task="b"]),
 ul > li.task-list-item.is-checked[data-task]:is([data-task="!"],[data-task="/"],[data-task="?"],[data-task="n"],[data-task="*"],[data-task="l"],[data-task="i"],[data-task="<"],[data-task="S"],[data-task="\""],[data-task="I"],[data-task="p"],[data-task="c"],[data-task="b"],[data-task="f"],[data-task="w"],[data-task="k"],[data-task="u"],[data-task="d"]) {
-    color: var(--md-color-text);
+    color: var(--color-cyan-530); /* Custom, was var(--md-color-text), never defined */
     text-decoration: none;
 }
 
@@ -1217,7 +1225,7 @@ input[type=checkbox][data-task]:is([data-task="!"],[data-task="/"],[data-task="?
 /* Faint Text */
 .markdown-source-view.mod-cm6 .HyperMD-task-line[data-task]:is([data-task=">"],[data-task="-"]),
 ul > li.task-list-item.is-checked[data-task]:is([data-task=">"],[data-task="-"]) {
-    color: var(--md-color-text-faint);
+    color: var(--color-cyan-900); /* Custom, was var(--md-color-text-faint), never defined */
     text-decoration: none;
 }
 
@@ -1689,62 +1697,20 @@ span.key.atrule {
     color: var(--color-slate-900);
 }
 
-/*──────────Metadata────────── Custom */
+/*──────────Properties────────── Custom */
 
-.frontmatter-container .frontmatter-container-header {
-    border: none;
-    display: none;
-    margin-bottom: var(--size-4-2);
-}
+/* Replaces the .frontmatter-container rules, which styled the metadata panel
+   that Properties replaced in Obsidian 1.4. Tag pills already take their
+   colors from the --tag-* variables; this gives them the border and shadow
+   the old frontmatter tags had. Selected by property key, which both 1.5.8 and
+   current Obsidian put on the row. Not carried over: hiding the panel header
+   (in Properties it is the collapse toggle) and the alias pill (Properties
+   shows aliases as plain values). */
 
-.frontmatter-container .frontmatter-section {
-    border-bottom: 0px solid var(--border-900);
-    margin-bottom: 5px;
-}
-
-.frontmatter-container .frontmatter-collapse-indicator {
-    margin-bottom: 0;
-}
-
-/* Frontmatter Aliases */
-
-/* Custom start: fixing YAML tag color */
-.frontmatter-container .frontmatter-alias {
-  text-decoration: none;
-  background-color: var(--background-secondary-alt);
-  border-radius: 30px;
-  color: var(--text-a);
-  font-size: 0.9em;
-  padding: 2px 8px;
-  margin: 2px 4px;
-  line-height: 19px;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-/* Custom end */
-
-/* Frontmatter Tags */
-
-.frontmatter-container a.tag {
-    color: var(--tag-color);
-    background: var(--tag-background);
-    border: 1px solid var(--border-900);
+.metadata-property[data-property-key="tags"] .multi-select-pill {
+    --pill-border-color: var(--border-900);
+    --pill-border-width: 1px;
     box-shadow: 0px 1px 0px var(--shadow-300);
-}
-
-.frontmatter-container a.tag:hover {
-    color: var(--tag-color-hover);
-    background: var(--tag-background-hover);
-    border: 1px solid var(--tag-border-color-hover);
-}
-
-.frontmatter-container a.tag:active {
-    color: var(--tag-color-hover);
-    background: var(--tag-background-hover);
-    border: 1px solid var(--tag-border-color-hover);
-    box-shadow: 0px 2px 0px 0px
-                var(--shadow-300) inset,
-                0px 0px 1px 0px var(--shadow-300);
 }
 
 /*────────────────────────────────────
@@ -1965,7 +1931,7 @@ a.external-link:hover {
 ────────────────────────────────────*/
 
 .publish-sections-container {
-    padding-right: var(--scale-2-4);
+    padding-right: var(--size-4-2);
 }
 
 .publish-section-header {
@@ -1973,8 +1939,8 @@ a.external-link:hover {
 }
 
 .publish-section-header-toggle-collapsed-button {
-    width: var(--scale-8-2);
-    height: var(--scale-8-2);
+    width: var(--size-4-4);
+    height: var(--size-4-4);
 }
 
 .publish-section-header-toggle-collapsed-button svg {
@@ -1982,8 +1948,8 @@ a.external-link:hover {
 }
 
 .mod-publish .publish-change-list {
-    padding: var(--scale-2-2)
-            var(--scale-2-2);
+    padding: var(--size-2-2)
+            var(--size-2-2);
 }
 
 .mod-publish .file-tree-item {
@@ -1996,39 +1962,39 @@ a.external-link:hover {
 }
 
 .mod-publish .file-tree-item-checkbox {
-    margin: var(--scale-2-1)
-            var(--scale-2-3)
-            var(--scale-2-1)
-            calc(-1 * var(--scale-2-2));
+    margin: var(--size-2-1)
+            var(--size-2-3)
+            var(--size-2-1)
+            calc(-1 * var(--size-2-2));
 }
 
 .mod-publish .mod-folder .file-tree-item-checkbox {
-    margin: var(--scale-2-1)
-            var(--scale-2-3)
-            var(--scale-2-1)
-            calc(-1 * var(--scale-2-1));
+    margin: var(--size-2-1)
+            var(--size-2-3)
+            var(--size-2-1)
+            calc(-1 * var(--size-2-1));
 }
 
 .mod-publish .publish-upload-item {
-    margin-right: var(--scale-2-2);
+    margin-right: var(--size-2-2);
 }
 
 .mod-publish .publish-upload-item:first-child {
-    margin-top: var(--scale-0-0);
+    margin-top: 0;
 }
 
 .mod-publish .publish-upload-item:last-child {
-    margin-bottom: var(--scale-0-0);
+    margin-bottom: 0;
 }
 
 .mod-publish .publish-upload-item::before {
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
 }
 
 /* Publish Modal Colors */
 .mod-publish .publish-change-list {
     background: var(--background-secondary);
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
 }
 
 .mod-publish .publish-sections-container > div:nth-child(1) .publish-change-list {
@@ -2077,7 +2043,7 @@ a.external-link:hover {
     font-weight: var(--font-bold);
     color: var(--color-gray-100);
     background-color: var(--background-modifier-success);
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
 }
 
 /* END OF !!! OBSIDIAN PUBLISH !!! */
@@ -2100,14 +2066,14 @@ a.external-link:hover {
                 var(--size-2-3);
     margin-top: var(--size-2-2);
     margin-left: var(--size-2-2);
-    border-radius: var(--size-0-0);
+    border-radius: 0;
 }
 
 .graph-controls.is-close {
     padding: 0;
     margin-top: var(--size-2-2);
     margin-left: var(--size-2-2);
-    border-radius: var(--scale-0-0);
+    border-radius: 0;
 }
 
 .graph-controls.is-close .graph-controls-button.mod-open,
@@ -2143,9 +2109,9 @@ a.external-link:hover {
     color: var(--color-gray-30);
     border: 1px solid var(--border-900);
     box-shadow: 0px 1px 0px var(--shadow-300);
-    border-radius: var(--scale-2-1);
-    transition: var(--duration-moderate-2)
-                var(--motion-heavy);
+    border-radius: var(--size-2-1);
+    transition: var(--anim-duration-moderate)
+                var(--anim-motion-swing);
 }
 
 .graph-controls.is-close {
@@ -2153,9 +2119,9 @@ a.external-link:hover {
     background-color: var(--color-gray-100);
     border: 1px solid var(--border-900);
     box-shadow: 0px 1px 0px var(--shadow-300);
-    border-radius: var(--scale-2-1);
-    transition: var(--duration-moderate-2)
-                var(--motion-heavy);
+    border-radius: var(--size-2-1);
+    transition: var(--anim-duration-moderate)
+                var(--anim-motion-swing);
 }
 
 .mod-root .workspace-leaf-content[data-type="graph"] .graph-controls.is-close {
@@ -2167,7 +2133,7 @@ a.external-link:hover {
     background: var(--background-primary);
 }
 
-.graph-controls-button.mod-open[aria-label="Open graph settings"] {
+.graph-controls-button.mod-open {
     border-bottom: 1px solid var(--border-900);
 }
 
@@ -2614,7 +2580,7 @@ body .search-result-file-match .search-result-file-match-replace-button {
                 0
                 var(--size-2-1);
     margin: 0 0;
-    margin-right: var(--size-2-4);
+    margin-right: var(--size-4-2);
 }
 
 pre button.copy-code-button {
@@ -2787,7 +2753,7 @@ input.document-replace-input {
 /* Search Input Close Button */
 
 .search-input-container
-.search-input-clear-button[aria-label="Clear search"] {
+.search-input-clear-button {
     color: var(--color-slate-900);
     border-radius: var(--size-2-1);
     margin-right: 0px;
@@ -2901,7 +2867,7 @@ select,
 .theme-dark .empty-state-action {
     font-family: var(--font-monospace-theme);
     font-size: var(--font-ui-small);
-    line-height: var(--line-height);
+    line-height: var(--line-height-normal);
     text-transform: uppercase;
     letter-spacing: 1px;
     text-align: center;
@@ -2943,7 +2909,7 @@ select,
     background: var(--color-cyan-700);
     border: 1px solid var(--border-300);
     border-radius: var(--size-2-2);
-    box-shadow: var(--shadow-m);
+    box-shadow: var(--shadow-s);
     transition: var(--anim-duration-fast)
                 var(--anim-motion-jumpy);
 }
@@ -2992,7 +2958,7 @@ body:not(.native-scrollbars) ::-webkit-scrollbar-thumb:active {
 /*─────────Code Scrollbar──────────*/
 
 code::-webkit-scrollbar {
-    height: var(--scale-2-2);
+    height: var(--size-2-2);
 }
 
 code::-webkit-scrollbar-thumb {
@@ -3176,16 +3142,16 @@ code::-webkit-scrollbar-thumb {
 /*─────────Calendar Plugin Colors──────────*/
 
 #calendar-container {
-    /* Plugin Variables in Light Theme */
+    /* Calendar plugin variables (were mapped to an undefined light palette) */
     --color-background-day-empty: transparent;
     --color-background-day-active: transparent;
-    --color-background-day-hover: var(--color-l-gray-40);
+    --color-background-day-hover: var(--color-gray-90);
     
     --color-dot: var(--color-yellow-300);
 
     --color-text-title: var(--text-normal);
-    --color-text-heading: var(--color-l-gray-60);
-    --color-text-day: var(--color-l-gray-80);
+    --color-text-heading: var(--text-muted);
+    --color-text-day: var(--text-normal);
     --color-text-today: var(--color-white);
     --color-text-weeknum: var(--text-muted);
 
@@ -3261,11 +3227,11 @@ table.calendar tr:nth-child(even) {
 
 .view-content .kanban-plugin__lane-setting-wrapper
 > div:last-child {
-    margin-bottom: var(--scale-0-0);
+    margin-bottom: 0;
 }
 
 .view-content .kanban-plugin__lane-wrapper {
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
     border: none;
 }
 
@@ -3301,10 +3267,13 @@ table.calendar tr:nth-child(even) {
 }
 
  
+/* Custom: matched by class instead of the English aria-label, and by any
+   element, since Kanban now renders these as links rather than buttons.
+   Item and lane "More options", then the lane's close button. */
 .view-content .kanban-plugin
-.kanban-plugin__item button[aria-label="More options"].kanban-plugin__item-postfix-button, 
+.kanban-plugin__item-postfix-button:not(.is-enabled),
 .view-content .kanban-plugin
-.kanban-plugin__lane button[aria-label="More options"].kanban-plugin__lane-settings-button,
+.kanban-plugin__lane-settings-button-wrapper > .kanban-plugin__lane-settings-button:not(.is-enabled):last-child,
 .view-content .kanban-plugin
 .kanban-plugin__lane-settings-button.is-enabled {
     background: var(--color-slate-900);
@@ -3315,8 +3284,9 @@ table.calendar tr:nth-child(even) {
                 var(--size-2-2);
 }
 
+/* Archive card */
 .view-content .kanban-plugin
-.kanban-plugin__item button[aria-label="Archive card"].kanban-plugin__item-prefix-button {
+.kanban-plugin__item-prefix-button {
     background: var(--color-purple-900);
     margin-right: var(--size-4-2);
     padding:    var(--size-2-1)
@@ -3417,12 +3387,12 @@ body .excalidraw {
 
 .workspace .excalidraw .reset-zoom-button {
     font-family: var(--font-monospace-theme);
-    font-size: var(--font-medium);
+    font-size: var(--font-ui-medium); /* Custom, was var(--font-medium), a font weight */
 }
 
 .workspace .excalidraw .color-picker-input {
     font-family: var(--font-interface-theme);
-    font-size: var(--font-medium);
+    font-size: var(--font-ui-medium); /* Custom, was var(--font-medium), a font weight */
 }
           
 /* Excalidraw Light Mode Colors */
@@ -3440,7 +3410,7 @@ body .excalidraw {
 
     --keybinding-color: var(--color-gray-40);
 
-    --select-highlight-color: var(--gray-60);
+    --select-highlight-color: var(--color-gray-60);
 }
 
 body .excalidraw .Island {
@@ -3460,7 +3430,7 @@ body .excalidraw .Island label.control-label {
 body .excalidraw button, 
 body .excalidraw .buttonList label {
     background: transparent;
-    border-radius: var(--scale-2-1);
+    border-radius: var(--size-2-1);
 }
 
 .workspace .excalidraw .Island button[type=button]:focus {
@@ -3492,7 +3462,7 @@ body .excalidraw kbd {
 
 .excalidraw.theme--dark .Island {
     border: 1px solid rgba(100, 100, 100, 0.25);
-    box-shadow: 1px solid var(--shadow-xsm);
+    box-shadow: 0px 1px 0px var(--shadow-300);
 }
 
 body .excalidraw.theme--dark .Island h3,
@@ -3519,17 +3489,10 @@ body .excalidraw.theme--dark kbd {
 }
 
 /*~ Icon Replacements for Excalidraw ~*/
-/* Quote Glyph Icon (Convert to Markdown RAW) */
-body:not(.no-custom-icons)
-.view-action[aria-label="Change to RAW mode (only effects text-elements with links or transclusions)"]
-svg.quote-glyph {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.553 18.15H3.447a1.443 1.443 0 0 1-1.442-1.441V7.291c0-.795.647-1.441 1.442-1.441h17.105c.795 0 1.442.646 1.442 1.441v9.418a1.44 1.44 0 0 1-1.441 1.441M6.811 15.268V11.52l1.922 2.402 1.922-2.402v3.748h1.922V8.732h-1.922l-1.922 2.403-1.922-2.403H4.889v6.535h1.922zM19.688 12h-1.922V8.732h-1.923V12h-1.922l2.884 3.364z'/%3E%3C/svg%3E");
-}
-
 /* Disk Icon (Save) */
 body:not(.no-custom-icons) svg.disk {
-    height: var(--scale-8-2);
-    width: var(--scale-8-2);
+    height: var(--size-4-4);
+    width: var(--size-4-4);
     background-color: currentColor;
 }
 
@@ -3544,8 +3507,8 @@ body:not(.no-custom-icons) svg.disk {
 /* Save as PNG, Save as SVG Icon */
 body:not(.no-custom-icons) svg.save-png,
 body:not(.no-custom-icons) svg.save-svg {
-    height: var(--scale-8-2);
-    width: var(--scale-8-2);
+    height: var(--size-4-4);
+    width: var(--size-4-4);
     background-color: currentColor;
 }
 
@@ -3581,7 +3544,7 @@ body.hider-frameless .workspace-split.mod-left-split >
 
 .markdown-source-view.mod-cm6
 .dataview.table-view-table > thead > tr > th {
-    font-size: var(--font-medium);
+    font-size: var(--font-text-size); /* Custom, was var(--font-medium), a font weight */
     border-width: 0px;
     border-bottom: 1px solid var(--background-modifier-border);
     border-right: 1px solid var(--background-modifier-border);
@@ -3606,7 +3569,7 @@ body.hider-frameless .workspace-split.mod-left-split >
 
 .markdown-source-view.mod-cm6
 .dataview.table-view-table thead.table-view-thead tr th {
-    font-size: var(--font-medium);
+    font-size: var(--font-text-size); /* Custom, was var(--font-medium), a font weight */
     background: var(--background-secondary);
 }
 
@@ -3640,7 +3603,7 @@ body.hider-frameless .workspace-split.mod-left-split >
 
 .markdown-preview-view 
 .dataview.table-view-table > thead > tr > th {
-    font-size: var(--font-scale-1);
+    font-size: var(--font-text-size);
     border-width: 0px;
     border-bottom: 1px solid var(--background-modifier-border);
     border-right: 1px solid var(--background-modifier-border);
@@ -3685,10 +3648,10 @@ body.hider-frameless .workspace-split.mod-left-split >
             Hover Editor
 ────────────────────────────────────*/
 body .popover.hover-popover.hover-editor {
-    --he-popover-border-radius: var(--scale-2-1);
+    --he-popover-border-radius: var(--size-2-1);
     --he-title-bar-height: 24px;
     border: 1px solid var(--color-gray-75);
-    transition: border-radius var(--duration-fast-1) var(--motion-smooth);
+    transition: border-radius var(--anim-duration-fast) var(--anim-motion-smooth);
 }
 
 .hover-editor.popover.hover-popover
@@ -3723,8 +3686,8 @@ body .popover.hover-popover.hover-editor {
 }
 
 .theme-dark .hover-editor:not(.is-pinned) {
-    --he-title-bar-inactive-action: var(--background-modifier-error-he);
-    --he-title-bar-active-action: var(--background-modifier-error-he) ;
+    --he-title-bar-inactive-action: var(--color-orange-300);
+    --he-title-bar-active-action: var(--color-orange-300);
     --he-title-bar-active-fg: var(--color-gray-40);
 }
 
@@ -3805,8 +3768,8 @@ body:not(.no-custom-icons) :is(
     svg.longform,
     svg.changelog
 ) {
-    height: calc(2px + var(--scale-8-2));
-    width: calc(2px + var(--scale-8-2));
+    height: calc(2px + var(--size-4-4));
+    width: calc(2px + var(--size-4-4));
     background-color: currentColor;
 }
 
