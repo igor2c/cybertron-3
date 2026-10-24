@@ -906,7 +906,6 @@ body.theme-dark {
     flex: 1 1 0;
     max-width: max-content;
     overflow: auto;
-    padding: 0 var(--size-4-1);
     white-space: pre;
     word-wrap: normal;
     color: #9FA9C6;
@@ -3913,7 +3912,7 @@ body.hider-frameless .workspace-split.mod-left-split >
 
 /* Theme Mode Specific */
 .theme-dark .markdown-source-view.mod-cm6 
-dataview.table-view-table .table-view-tbody tr {
+.dataview.table-view-table .table-view-tbody tr {
     background: var(--color-blacker);
 }
 
