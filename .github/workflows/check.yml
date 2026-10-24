@@ -1,0 +1,30 @@
+# On every push and pull request: rebuild theme.css, make sure the committed copy is up to date,
+# under the recommended size, and free of the issues Obsidian's automated review looks for.
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build (fails if theme.css is over the recommended size)
+        run: npm run build
+
+      - name: Committed theme.css matches src/theme.css
+        run: git diff --exit-code theme.css || { echo "Run npm run build and commit theme.css"; exit 1; }
+
+      - name: Obsidian review rules
+        run: npm run lint

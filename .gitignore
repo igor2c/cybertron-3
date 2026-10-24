@@ -2,3 +2,4 @@
 Thumbs.db
 .obsidian/
 *.zip
+node_modules/

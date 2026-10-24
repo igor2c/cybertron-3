@@ -1,0 +1,17 @@
+{
+  "name": "cybertron-3",
+  "private": true,
+  "description": "Build tooling for the Cybertron 3 Obsidian theme",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "lint": "node scripts/lint.mjs theme.css",
+    "check": "npm run build && npm run lint"
+  },
+  "devDependencies": {
+    "lightningcss": "^1.30.0",
+    "stylelint": "^17.0.0",
+    "stylelint-config-obsidianmd": "^0.1.0"
+  }
+}

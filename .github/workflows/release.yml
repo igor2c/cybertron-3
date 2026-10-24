@@ -1,5 +1,5 @@
 # Attaches theme.css and manifest.json (which Obsidian downloads) to a release.
-# Runs when you push a version tag (for example 1.0.0), creating the release,
+# Runs when you push a version tag (for example 1.0.2), creating the release,
 # or when you publish a release on GitHub, adding the files to it.
 name: Release
 
@@ -19,6 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
       - name: Check that the tag matches manifest.json
         run: |
           version=$(jq -r .version manifest.json)
@@ -26,6 +31,12 @@ jobs:
             echo "Tag ${GITHUB_REF_NAME} does not match manifest.json version $version"
             exit 1
           fi
+
+      - name: Build theme.css from src/theme.css
+        run: |
+          npm ci
+          npm run build
+          git diff --exit-code theme.css || { echo "theme.css is out of date: run npm run build and commit it"; exit 1; }
 
       - name: Create release (or update its files if it already exists)
         env:
