@@ -192,6 +192,7 @@ body.theme-dark {
     --border-width: 1px;
 
     /* Callouts */
+    --callout-default: var(--color-blue); /* Custom: a full color for callout types this theme doesn't list (see Callouts) */
     --callout-border-width: 1px;
     --callout-border-opacity: 0.3;
     --callout-padding: 0 0 0 0;
@@ -1515,130 +1516,148 @@ li[data-task="d"] > input:checked {
     background: var(--background-primary-alt);
 }
 
+/* Custom start: Obsidian 1.13 changed --callout-color from an "R, G, B"
+   triplet to a full color, so this theme's triplets left callouts without
+   their colors there. The colors below are now full colors, as in LYT Mode
+   1.11.0 and later. LYT Mode requires Obsidian 1.13 for that; these two rules
+   read the colors the way Obsidian 1.13 does instead, which keeps callouts
+   colored in earlier versions too, back to 1.5.8. */
+.callout {
+    --table-border-color: color-mix(in oklch, var(--callout-color) 25%, var(--background-primary) 50%);
+    border-color: color-mix(in oklch, var(--callout-color) calc(var(--callout-border-opacity) * 100%), transparent);
+    background-color: color-mix(in oklch, var(--callout-color) 10%, transparent);
+}
+
+.callout-title,
+.callout-icon .svg-icon {
+    color: var(--callout-color);
+}
+/* Custom end */
+
 .callout[data-callout="note"] {
-    --callout-color: 207, 227, 255;
+    --callout-color: rgb(207, 227, 255);
 }
 
 .callout[data-callout="abstract"] {
-    --callout-color: 74, 176, 255;
+    --callout-color: rgb(74, 176, 255);
 }
 
 .callout[data-callout="summary"] {
-    --callout-color: 243, 238, 94;
+    --callout-color: rgb(243, 238, 94);
 }
 
 .callout[data-callout="tldr"] {
-    --callout-color: 184, 148, 255;
+    --callout-color: rgb(184, 148, 255);
     --callout-icon: clock-4;
 }
 
 .callout[data-callout="info"] {
-    --callout-color: 74, 176, 255;
+    --callout-color: rgb(74, 176, 255);
 }
 
 .callout[data-callout="todo"] {
-    --callout-color: 170, 230, 89;
+    --callout-color: rgb(170, 230, 89);
 }
 
 .callout[data-callout="tip"] {
-    --callout-color: 244, 138, 74;
+    --callout-color: rgb(244, 138, 74);
 }
 
 .callout[data-callout="hint"] {
-    --callout-color: 244, 138, 74;
+    --callout-color: rgb(244, 138, 74);
 }
 
 .callout[data-callout="important"] {
-    --callout-color: 255, 109, 109;
+    --callout-color: rgb(255, 109, 109);
 }
 
 .callout[data-callout="success"] {
-    --callout-color: 77, 224, 185;
+    --callout-color: rgb(77, 224, 185);
 }
 
 .callout[data-callout="check"] {
-    --callout-color: 77, 224, 185;
+    --callout-color: rgb(77, 224, 185);
 }
 
 .callout[data-callout="done"] {
-    --callout-color: 77, 224, 185;
+    --callout-color: rgb(77, 224, 185);
 }
 
 .callout[data-callout="question"] {
-    --callout-color: 255, 128, 183;
+    --callout-color: rgb(255, 128, 183);
 }
 
 .callout[data-callout="help"] {
-    --callout-color: 255, 128, 183;
+    --callout-color: rgb(255, 128, 183);
 }
 
 .callout[data-callout="faq"] {
-    --callout-color: 255, 128, 183;
+    --callout-color: rgb(255, 128, 183);
 }
 
 .callout[data-callout="warning"] {
-    --callout-color: 244, 138, 74;
+    --callout-color: rgb(244, 138, 74);
 }
 
 .callout[data-callout="caution"] {
-    --callout-color: 244, 138, 74;
+    --callout-color: rgb(244, 138, 74);
 }
 
 .callout[data-callout="attention"] {
-    --callout-color: 244, 138, 74;
+    --callout-color: rgb(244, 138, 74);
 }
 
 .callout[data-callout="fail"],
 .callout[data-callout="failure"] {
-    --callout-color: 255, 74, 74;
+    --callout-color: rgb(255, 74, 74);
 }
 
 .callout[data-callout="missing"] {
-    --callout-color: 255, 74, 74;
+    --callout-color: rgb(255, 74, 74);
 }
 
 .callout[data-callout="danger"] {
-    --callout-color: 255, 74, 74;
+    --callout-color: rgb(255, 74, 74);
 }
 
 .callout[data-callout="error"] {
-    --callout-color: 255, 74, 74;
+    --callout-color: rgb(255, 74, 74);
 }
 
 .callout[data-callout="bug"] {
-    --callout-color: 252, 95, 142;
+    --callout-color: rgb(252, 95, 142);
 }
 
 .callout[data-callout="example"] {
-    --callout-color: 184, 148, 255;
+    --callout-color: rgb(184, 148, 255);
 }
 
 .callout[data-callout="quote"] {
-    --callout-color: 184, 148, 255;
+    --callout-color: rgb(184, 148, 255);
 }
 
 .callout[data-callout="cite"] {
-    --callout-color: 159, 167, 188;
+    --callout-color: rgb(159, 167, 188);
 }
 
 /* custom callouts */
 .callout[data-callout="pro"] {
-    --callout-color: 65, 201, 108;
+    --callout-color: rgb(65, 201, 108);
     --callout-icon: thumbs-up;
 }
 
 .callout[data-callout="con"] {
-    --callout-color: 255, 84, 84;
+    --callout-color: rgb(255, 84, 84);
     --callout-icon: thumbs-down;
 }
 
 .callout[data-callout="idea"] {
-    --callout-color: 238, 255, 139;
+    --callout-color: rgb(238, 255, 139);
     --callout-icon: lightbulb;
 }
 
 .callout[data-callout="related"] {
-    --callout-color: 184, 148, 255;
+    --callout-color: rgb(184, 148, 255);
     --callout-icon: shuffle;
 }
 
